@@ -6,6 +6,9 @@
     <title>آزمایشگاه محاسباتی شیمی فیزیک ۲ | دکتر سارا شهریاری</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- اضافه کردن کتابخانه MathJax برای رندر فرمول‌ها -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;700;900&display=swap" rel="stylesheet">
     <style>
         body {
@@ -46,6 +49,8 @@
         }
         .dir-ltr { direction: ltr; text-align: left; }
         input[type=range] { height: 6px; border-radius: 6px; }
+        /* تنظیمات فرمول‌ها برای خوانایی بهتر در تم تاریک */
+        .math { font-size: 1.1em; color: #fbbf24; }
     </style>
 </head>
 <body class="min-h-screen p-3 md:p-7">
@@ -124,7 +129,7 @@
                     <div class="lg:col-span-4 space-y-4 bg-slate-900/95 p-5 rounded-2xl border border-slate-700/80">
                         <div>
                             <div class="flex justify-between text-xs md:text-sm mb-1">
-                                <span class="text-slate-300">فشار بخار مایع خالص B ($P_B^\circ$):</span>
+                                <span class="text-slate-300">فشار بخار مایع خالص B (\(P_B^\circ\)):</span>
                                 <span id="val-pb" class="text-sky-400 font-black font-mono">320 Torr</span>
                             </div>
                             <input type="range" id="pb" min="80" max="500" step="10" value="320" oninput="updateAllCharts()" class="w-full accent-sky-400 cursor-pointer">
@@ -132,7 +137,7 @@
 
                         <div>
                             <div class="flex justify-between text-xs md:text-sm mb-1">
-                                <span class="text-slate-300">فشار بخار مایع خالص C ($P_C^\circ$):</span>
+                                <span class="text-slate-300">فشار بخار مایع خالص C (\(P_C^\circ\)):</span>
                                 <span id="val-pc" class="text-rose-400 font-black font-mono">140 Torr</span>
                             </div>
                             <input type="range" id="pc" min="80" max="500" step="10" value="140" oninput="updateAllCharts()" class="w-full accent-rose-500 cursor-pointer">
@@ -140,7 +145,7 @@
 
                         <div>
                             <div class="flex justify-between text-xs md:text-sm mb-1">
-                                <span class="text-slate-300">کسر مولی انتخابی در مایع ($X_B^l$):</span>
+                                <span class="text-slate-300">کسر مولی انتخابی در مایع (\(X_B^l\)):</span>
                                 <span id="val-xb" class="text-emerald-400 font-black font-mono">0.40</span>
                             </div>
                             <input type="range" id="xb" min="0.05" max="0.95" step="0.05" value="0.40" oninput="updateAllCharts()" class="w-full accent-emerald-400 cursor-pointer">
@@ -148,18 +153,18 @@
 
                         <div>
                             <div class="flex justify-between text-xs md:text-sm mb-1">
-                                <span class="text-slate-300">دمای حمام ثابت ($T$):</span>
+                                <span class="text-slate-300">دمای حمام ثابت (\(T\)):</span>
                                 <span id="val-temp" class="text-amber-400 font-black font-mono">298 K (25°C)</span>
                             </div>
                             <input type="range" id="temp" min="273" max="373" step="5" value="298" oninput="updateAllCharts()" class="w-full accent-amber-400 cursor-pointer">
                         </div>
 
                         <div>
-                            <label class="block text-xs md:text-sm text-slate-300 mb-1.5 font-bold">نوع محلول (قانون رائول و ضریب فعالیت $\gamma$):</label>
+                            <label class="block text-xs md:text-sm text-slate-300 mb-1.5 font-bold">نوع محلول (قانون رائول و ضریب فعالیت \(\gamma\)):</label>
                             <select id="dev-type" onchange="updateAllCharts()" class="w-full bg-slate-800 border border-slate-600 rounded-xl p-2.5 text-xs md:text-sm text-white outline-none">
-                                <option value="ideal">🟢 محلول ایده‌آل (γ = 1 | بنزن - تولوئن)</option>
-                                <option value="pos">🟠 انحراف مثبت (γ > 1 | متانول - بنزن)</option>
-                                <option value="neg">🔵 انحراف منفی (γ < 1 | استون - کلروفرم)</option>
+                                <option value="ideal">🟢 محلول ایده‌آل (\(\gamma = 1\) | بنزن - تولوئن)</option>
+                                <option value="pos">🟠 انحراف مثبت (\(\gamma > 1\) | متانول - بنزن)</option>
+                                <option value="neg">🔵 انحراف منفی (\(\gamma < 1\) | استون - کلروفرم)</option>
                             </select>
                         </div>
 
@@ -169,15 +174,15 @@
 
                     <div class="lg:col-span-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div class="bg-slate-950/95 p-4 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                            <div class="text-xs font-bold text-center text-sky-300 mb-2">نمودار تعادل فاز مایع - بخار (P بر حسب X_B)</div>
+                            <div class="text-xs font-bold text-center text-sky-300 mb-2">نمودار تعادل فاز مایع - بخار (\(P\) بر حسب \(X_B\))</div>
                             <canvas id="phaseChart" height="240"></canvas>
                             <div class="text-[11px] text-slate-400 text-center mt-2 font-mono">خط آبی: معادله ۶۷ (مایع) | منحنی قرمز: معادله ۶۸ (بخار) | نقطه زرد: ترکیب انتخابی</div>
                         </div>
 
                         <div class="bg-slate-950/95 p-4 rounded-2xl border border-slate-800 flex flex-col justify-between">
-                            <div class="text-xs font-bold text-center text-emerald-300 mb-2">توابع ترمودینامیکی اختلاط (ΔG_mix , TΔS_mix , ΔH_mix)</div>
+                            <div class="text-xs font-bold text-center text-emerald-300 mb-2">توابع ترمودینامیکی اختلاط (\(\Delta G_{mix}\) , \(T\Delta S_{mix}\) , \(\Delta H_{mix}\))</div>
                             <canvas id="thermoChart" height="240"></canvas>
-                            <div class="text-[11px] text-slate-400 text-center mt-2 font-mono">اسلایدهای دکتر شهریاری: ΔG_mix = ΔH_mix - TΔS_mix < 0</div>
+                            <div class="text-[11px] text-slate-400 text-center mt-2 font-mono">اسلایدهای دکتر شهریاری: \(\Delta G_{mix} = \Delta H_{mix} - T\Delta S_{mix} < 0\)</div>
                         </div>
                     </div>
                 </div>
@@ -191,7 +196,7 @@
             <div class="glass-card rounded-3xl p-5 md:p-8">
                 <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-5 gap-3 border-b border-slate-800 pb-4">
                     <div>
-                        <h2 class="text-xl md:text-2xl font-black text-emerald-400">💚 تخته‌سفید هوشمند الکتروشیمی و حاصل‌ضرب حلالیت ($K_{sp}$)</h2>
+                        <h2 class="text-xl md:text-2xl font-black text-emerald-400">💚 تخته‌سفید هوشمند الکتروشیمی و حاصل‌ضرب حلالیت (\(K_{sp}\))</h2>
                         <p class="text-slate-400 text-xs md:text-sm mt-1">بازسازی ۱۰۰٪ دقیق دست‌خط پای تخته کلاس دکتر سارا شهریاری (مثال ۵-۶ باریم سولفات و تمرین نقره کلرید)</p>
                     </div>
                     <div class="flex gap-2 flex-wrap">
@@ -206,19 +211,19 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                     <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700">
-                        <label class="text-xs text-slate-400 block">رسانایی ویژه خالص ($k / S\cdot m^{-1}$)</label>
+                        <label class="text-xs text-slate-400 block">رسانایی ویژه خالص (\(k\) / \(S\cdot m^{-1}\))</label>
                         <input id="inp-k" type="number" step="0.000001" value="0.000111" oninput="calcKsp()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-emerald-300 font-mono font-bold">
                     </div>
                     <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700">
-                        <label class="text-xs text-slate-400 block">رسانایی حدی کاتیون ($\lambda_{\circ(+)} / S\cdot m^2\cdot eq^{-1}$)</label>
+                        <label class="text-xs text-slate-400 block">رسانایی حدی کاتیون (\(\lambda_{\circ(+)}\) / \(S\cdot m^2\cdot eq^{-1}\))</label>
                         <input id="inp-lp" type="number" step="0.00001" value="0.006364" oninput="calcKsp()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-sky-300 font-mono font-bold">
                     </div>
                     <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700">
-                        <label class="text-xs text-slate-400 block">رسانایی حدی آنیون ($\lambda_{\circ(-)} / S\cdot m^2\cdot eq^{-1}$)</label>
+                        <label class="text-xs text-slate-400 block">رسانایی حدی آنیون (\(\lambda_{\circ(-)}\) / \(S\cdot m^2\cdot eq^{-1}\))</label>
                         <input id="inp-ln" type="number" step="0.00001" value="0.007980" oninput="calcKsp()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-rose-300 font-mono font-bold">
                     </div>
                     <div class="bg-slate-900/90 p-3.5 rounded-2xl border border-slate-700">
-                        <label class="text-xs text-slate-400 block">ظرفیت فلز × تعداد فلز ($n$)</label>
+                        <label class="text-xs text-slate-400 block">ظرفیت فلز × تعداد فلز (\(n\))</label>
                         <input id="inp-n" type="number" step="1" value="2" oninput="calcKsp()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-xl p-2.5 text-amber-300 font-mono font-bold">
                     </div>
                 </div>
@@ -228,7 +233,7 @@
 
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 <div class="glass-card rounded-3xl p-6">
-                    <h3 class="text-lg font-black text-sky-400 mb-1">⚡ محاسبه‌گر میانگین مولالیته یونی ($m_\pm$) و قدرت یونی ($I_m$)</h3>
+                    <h3 class="text-lg font-black text-sky-400 mb-1">⚡ محاسبه‌گر میانگین مولالیته یونی (\(m_\pm\)) و قدرت یونی (\(I_m\))</h3>
                     <p class="text-xs text-slate-400 mb-4">منطبق بر معادلات (۵-۲۸) و (۵-۳۰) و مثال ۵-۷ صفحه ۱۲۲ جزوه</p>
 
                     <div class="flex flex-wrap gap-1.5 mb-4">
@@ -240,18 +245,18 @@
 
                     <div class="grid grid-cols-3 gap-2.5 mb-4">
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">مولالیته نمک ($m$)</label>
+                            <label class="text-[11px] text-slate-400">مولالیته نمک (\(m\))</label>
                             <input id="ion-m" type="number" step="0.01" value="0.05" oninput="calcIonic()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-white font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">تعداد کاتیون ($b$) و بار ($z_+$)</label>
+                            <label class="text-[11px] text-slate-400">تعداد کاتیون (\(b\)) و بار (\(z_+\))</label>
                             <div class="flex gap-1 mt-1">
                                 <input id="ion-b" type="number" value="2" oninput="calcIonic()" class="w-1/2 bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-sky-300 font-mono text-sm">
                                 <input id="ion-zp" type="number" value="3" oninput="calcIonic()" class="w-1/2 bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-amber-300 font-mono text-sm">
                             </div>
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">تعداد آنیون ($a$) و بار ($\vert{}z_-\vert{}$)</label>
+                            <label class="text-[11px] text-slate-400">تعداد آنیون (\(a\)) و بار (\(|z_-|\))</label>
                             <div class="flex gap-1 mt-1">
                                 <input id="ion-a" type="number" value="3" oninput="calcIonic()" class="w-1/2 bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-rose-300 font-mono text-sm">
                                 <input id="ion-zn" type="number" value="2" oninput="calcIonic()" class="w-1/2 bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-amber-300 font-mono text-sm">
@@ -263,24 +268,24 @@
                 </div>
 
                 <div class="glass-card rounded-3xl p-6">
-                    <h3 class="text-lg font-black text-amber-400 mb-1">🧪 درجه یونش ($\alpha$) و ثابت یونش الکترولیت ضعیف ($K_{in}$)</h3>
+                    <h3 class="text-lg font-black text-amber-400 mb-1">🧪 درجه یونش (\(\alpha\)) و ثابت یونش الکترولیت ضعیف (\(K_{in}\))</h3>
                     <p class="text-xs text-slate-400 mb-4">منطبق بر مثال ۵-۵ صفحه ۱۱۵ جزوه (محلول استیک اسید و قانون کهلروش)</p>
 
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">رسانایی ویژه ($k / S\cdot m^{-1}$)</label>
+                            <label class="text-[11px] text-slate-400">رسانایی ویژه (\(k\) / \(S\cdot m^{-1}\))</label>
                             <input id="weak-k" type="number" step="0.0001" value="0.0163" oninput="calcWeak()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">غلظت نرمالیته/مولاریته ($N=M_0$)</label>
+                            <label class="text-[11px] text-slate-400">غلظت نرمالیته/مولاریته (\(N=M_0\))</label>
                             <input id="weak-n" type="number" step="0.001" value="0.01" oninput="calcWeak()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">$\lambda_{\circ(H^+)} (S\cdot m^2\cdot eq^{-1})$</label>
+                            <label class="text-[11px] text-slate-400">\(\lambda_{\circ(H^+)}\) (\(S\cdot m^2\cdot eq^{-1}\))</label>
                             <input id="weak-lp" type="number" step="0.0001" value="0.034982" oninput="calcWeak()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-sky-300 font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">$\lambda_{\circ(A^-)} (S\cdot m^2\cdot eq^{-1})$</label>
+                            <label class="text-[11px] text-slate-400">\(\lambda_{\circ(A^-)}\) (\(S\cdot m^2\cdot eq^{-1}\))</label>
                             <input id="weak-ln" type="number" step="0.0001" value="0.00409" oninput="calcWeak()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-rose-300 font-mono text-sm">
                         </div>
                     </div>
@@ -309,19 +314,19 @@
 
                     <div class="grid grid-cols-2 gap-3 mb-4">
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">دمای جوش نرمال ($T_b^\circ / K$)</label>
+                            <label class="text-[11px] text-slate-400">دمای جوش نرمال (\(T_b^\circ / K\))</label>
                             <input id="clap-t0" type="number" step="0.1" value="373.15" oninput="calcClapeyron()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">فشار اولیه ($P^\circ / atm$)</label>
+                            <label class="text-[11px] text-slate-400">فشار اولیه (\(P^\circ / atm\))</label>
                             <input id="clap-p0" type="number" step="0.01" value="1.0" oninput="calcClapeyron()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">فشار جدید ($P / atm$)</label>
+                            <label class="text-[11px] text-slate-400">فشار جدید (\(P / atm\))</label>
                             <input id="clap-p" type="number" step="0.01" value="1.10" oninput="calcClapeyron()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-emerald-300 font-mono text-sm">
                         </div>
                         <div class="bg-slate-900 p-2.5 rounded-xl border border-slate-700">
-                            <label class="text-[11px] text-slate-400">آنتالپی تبخیر ($\Delta H_{vap}^\circ / J\cdot mol^{-1}$)</label>
+                            <label class="text-[11px] text-slate-400">آنتالپی تبخیر (\(\Delta H_{vap}^\circ / J\cdot mol^{-1}\))</label>
                             <input id="clap-dh" type="number" step="100" value="40656" oninput="calcClapeyron()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-amber-300 font-mono text-sm">
                         </div>
                     </div>
@@ -337,10 +342,10 @@
                 <div class="glass-card rounded-3xl p-6 flex flex-col justify-between">
                     <div>
                         <div class="flex justify-between items-center mb-1">
-                            <h2 class="text-lg md:text-xl font-black text-amber-400">🌡️ خواص غلظتی و تعیین فرمول گوگرد ($S_8$)</h2>
+                            <h2 class="text-lg md:text-xl font-black text-amber-400">🌡️ خواص غلظتی و تعیین فرمول گوگرد (\(S_8\))</h2>
                             <span class="text-xs bg-amber-500/20 text-amber-300 px-2.5 py-1 rounded-lg">اسلاید دکتر شهریاری</span>
                         </div>
-                        <p class="text-xs text-slate-400 mb-4">محاسبه جرم مولی، فرمول گوگرد، نقطه جوش، انجماد و فشار اسمزی ($\pi = iMRT$)</p>
+                        <p class="text-xs text-slate-400 mb-4">محاسبه جرم مولی، فرمول گوگرد، نقطه جوش، انجماد و فشار اسمزی (\(\pi = iMRT\))</p>
 
                         <div class="grid grid-cols-2 gap-3 mb-4">
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
@@ -352,11 +357,11 @@
                                 <input id="col-w1" type="number" step="1" value="100" oninput="calcColligative()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
                             </div>
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                                <label class="text-xs text-slate-400">افزایش دمای جوش ($\Delta T_b / K$)</label>
+                                <label class="text-xs text-slate-400">افزایش دمای جوش (\(\Delta T_b / K\))</label>
                                 <input id="col-dtb" type="number" step="0.001" value="0.253" oninput="calcColligative()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-emerald-300 font-mono">
                             </div>
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                                <label class="text-xs text-slate-400">ثابت افزایش جوش بنزن ($k_b$)</label>
+                                <label class="text-xs text-slate-400">ثابت افزایش جوش بنزن (\(k_b\))</label>
                                 <input id="col-kb" type="number" step="0.01" value="2.53" oninput="calcColligative()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-amber-300 font-mono">
                             </div>
                         </div>
@@ -366,11 +371,11 @@
                         <div class="p-4 rounded-2xl bg-sky-950/40 border border-sky-500/30 space-y-2">
                             <div class="text-xs font-extrabold text-sky-300">❄️ شبیه‌ساز ذوب یخ زیر فشار بالا (مثال ۳-۳ جزوه):</div>
                             <div class="flex items-center gap-3">
-                                <span class="text-xs text-slate-300">فشار روی یخ ($P / atm$):</span>
+                                <span class="text-xs text-slate-300">فشار روی یخ (\(P / atm\)):</span>
                                 <input id="ice-p" type="number" value="101" oninput="calcIceMelting()" class="w-28 bg-slate-950 border border-slate-700 rounded-lg p-1.5 text-center font-mono text-sky-300 text-sm">
                                 <span id="ice-res" class="text-xs font-mono text-amber-300 font-bold"></span>
                             </div>
-                            <p class="text-[11px] text-slate-400">چون حجم مولی آب مایع از یخ کمتر است ($\Delta V_m^\circ = -1.621\times 10^{-6}\text{ m}^3/\text{mol} < 0$)، افزایش فشار باعث کاهش دمای ذوب یخ می‌شود.</p>
+                            <p class="text-[11px] text-slate-400">چون حجم مولی آب مایع از یخ کمتر است (\(\Delta V_m^\circ = -1.621\times 10^{-6}\text{ m}^3/\text{mol} < 0\))، افزایش فشار باعث کاهش دمای ذوب یخ می‌شود.</p>
                         </div>
                     </div>
                 </div>
@@ -384,32 +389,32 @@
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 <div class="lg:col-span-7 glass-card rounded-3xl p-6">
                     <h2 class="text-xl font-black text-purple-400 mb-1">⚖️ تحلیل‌گر هوشمند سیستم‌های جزوه دکتر سارا شهریاری</h2>
-                    <p class="text-xs text-slate-400 mb-4">روی هر یک از سیستم‌های امتحانی زیر کلیک کنید تا استدلال کامل $n, r, s, C, F$ نمایش داده شود:</p>
+                    <p class="text-xs text-slate-400 mb-4">روی هر یک از سیستم‌های امتحانی زیر کلیک کنید تا استدلال کامل \(n\), \(r\), \(s\), \(C\), \(F\) نمایش داده شود:</p>
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-5">
                         <button onclick="showGibbs(1)" class="text-right p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 transition">
-                            <div class="font-bold text-sky-300 text-xs md:text-sm">۱. تعادل گازی سنتز/تفکیک آمونیاک ($NH_3$)</div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">مقایسه حالت کلی ($s=0$) و تفکیک از $NH_3$ خالص ($s=1$)</div>
+                            <div class="font-bold text-sky-300 text-xs md:text-sm">۱. تعادل گازی سنتز/تفکیک آمونیاک (\(NH_3\))</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">مقایسه حالت کلی (\(s=0\)) و تفکیک از \(NH_3\) خالص (\(s=1\))</div>
                         </button>
                         <button onclick="showGibbs(2)" class="text-right p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 transition">
-                            <div class="font-bold text-emerald-300 text-xs md:text-sm">۲. محلول آبی استیک اسید ($CH_3COOH$)</div>
+                            <div class="font-bold text-emerald-300 text-xs md:text-sm">۲. محلول آبی استیک اسید (\(CH_3COOH\))</div>
                             <div class="text-[11px] text-slate-400 mt-0.5">شامل ۵ گونه، ۲ تعادل یونش و شرط خنثی بودن الکتریکی</div>
                         </button>
                         <button onclick="showGibbs(3)" class="text-right p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 transition">
-                            <div class="font-bold text-amber-300 text-xs md:text-sm">۳. تله امتحانی: تجزیه $CaCO_{3(s)}$</div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">چرا با وجود برابری مول‌های $CaO$ و $CO_2$، مقدار $s=0$ است؟</div>
+                            <div class="font-bold text-amber-300 text-xs md:text-sm">۳. تله امتحانی: تجزیه \(CaCO_{3(s)}\)</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">چرا با وجود برابری مول‌های \(CaO\) و \(CO_2\)، مقدار \(s=0\) است؟</div>
                         </button>
                         <button onclick="showGibbs(4)" class="text-right p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 transition">
-                            <div class="font-bold text-rose-300 text-xs md:text-sm">۴. سرد کردن مذاب $LiNO_3$ و $KNO_3$</div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">تحلیل فاز متراکم و اثبات ثابت ماندن دما در $F=0$</div>
+                            <div class="font-bold text-rose-300 text-xs md:text-sm">۴. سرد کردن مذاب \(LiNO_3\) و \(KNO_3\)</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">تحلیل فاز متراکم و اثبات ثابت ماندن دما در \(F=0\)</div>
                         </button>
                         <button onclick="showGibbs(5)" class="text-right p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 transition">
-                            <div class="font-bold text-indigo-300 text-xs md:text-sm">۵. تجزیه آمونیوم کلرید ($NH_4Cl_{(s)}$)</div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">تفاوت با کربنات: چرا اینجا شرط موازنه‌ای $s=1$ کاربرد دارد؟</div>
+                            <div class="font-bold text-indigo-300 text-xs md:text-sm">۵. تجزیه آمونیوم کلرید (\(NH_4Cl_{(s)}\))</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">تفاوت با کربنات: چرا اینجا شرط موازنه‌ای \(s=1\) کاربرد دارد؟</div>
                         </button>
                         <button onclick="showGibbs(6)" class="text-right p-3 rounded-2xl bg-slate-900/90 hover:bg-slate-800 border border-slate-700 transition">
-                            <div class="font-bold text-teal-300 text-xs md:text-sm">۶. تعادل $CuO_{(s)} + H_{2(g)} \rightleftharpoons Cu_{(s)} + H_2O_{(g)}$</div>
-                            <div class="text-[11px] text-slate-400 mt-0.5">بررسی روش حذف جامدات خالص در محاسبه $C$ و $F$</div>
+                            <div class="font-bold text-teal-300 text-xs md:text-sm">۶. تعادل \(CuO_{(s)} + H_{2(g)} \rightleftharpoons Cu_{(s)} + H_2O_{(g)}\)</div>
+                            <div class="text-[11px] text-slate-400 mt-0.5">بررسی روش حذف جامدات خالص در محاسبه \(C\) و \(F\)</div>
                         </button>
                     </div>
 
@@ -423,19 +428,19 @@
 
                         <div class="grid grid-cols-2 gap-3 mb-4">
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                                <label class="text-xs text-slate-400">تعداد کل گونه‌ها ($n$)</label>
+                                <label class="text-xs text-slate-400">تعداد کل گونه‌ها (\(n\))</label>
                                 <input id="g-n" type="number" min="1" value="3" oninput="calcCustomGibbs()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
                             </div>
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                                <label class="text-xs text-slate-400">تعداد تعادل‌های مستقل ($r$)</label>
+                                <label class="text-xs text-slate-400">تعداد تعادل‌های مستقل (\(r\))</label>
                                 <input id="g-r" type="number" min="0" value="1" oninput="calcCustomGibbs()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-white font-mono">
                             </div>
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                                <label class="text-xs text-slate-400">شرط موازنه‌ای معتبر در یک فاز ($s$)</label>
+                                <label class="text-xs text-slate-400">شرط موازنه‌ای معتبر در یک فاز (\(s\))</label>
                                 <input id="g-s" type="number" min="0" value="0" oninput="calcCustomGibbs()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-amber-300 font-mono">
                             </div>
                             <div class="bg-slate-900 p-3 rounded-xl border border-slate-700">
-                                <label class="text-xs text-slate-400">تعداد فازهای در حال تعادل ($P$)</label>
+                                <label class="text-xs text-slate-400">تعداد فازهای در حال تعادل (\(P\))</label>
                                 <input id="g-p" type="number" min="1" value="3" oninput="calcCustomGibbs()" class="w-full mt-1 bg-slate-950 border border-slate-700 rounded-lg p-2 text-sky-300 font-mono">
                             </div>
                         </div>
@@ -487,56 +492,63 @@
         let thermoChartInstance = null;
         let vaporTableChartInstance = null;
 
+        // تابع کمکی برای فراخوانی مجدد MathJax پس از به‌روزرسانی محتوا
+        function renderMathJax() {
+            if (window.MathJax) {
+                MathJax.typesetPromise().catch((err) => console.log('MathJax error: ', err.message));
+            }
+        }
+
         const QA_DATABASE = [
             {
                 tag: "سوال برگه میان‌ترم",
                 title: "۱. چرا پتانسیل شیمیایی هر جزء در محلول کمتر از حالت خالص آن است؟ (تحلیل با فرمول)",
-                body: "طبق معادله (۱) اسلاید دکتر شهریاری، پتانسیل شیمیایی جزء i در محلول از رابطه μ_i = μ_i° + RT ln X_i پیروی می‌کند. از آنجا که در هر محلول کسر مولی جزء کوچکتر از یک است (X_i < 1)، مقدار لگاریتم طبیعی آن منفی است (ln X_i < 0). بنابراین همواره μ_i < μ_i° است. همین کاهش پتانسیل شیمیایی عامل پیشران ترمودینامیکی در پدیده اسمز است."
+                body: "طبق معادله (۱) اسلاید دکتر شهریاری، پتانسیل شیمیایی جزء \(i\) در محلول از رابطه \(\mu_i = \mu_i^\circ + RT \ln X_i\) پیروی می‌کند. از آنجا که در هر محلول کسر مولی جزء کوچکتر از یک است (\(X_i < 1\))، مقدار لگاریتم طبیعی آن منفی است (\(\ln X_i < 0\)). بنابراین همواره \(\mu_i < \mu_i^\circ\) است. همین کاهش پتانسیل شیمیایی عامل پیشران ترمودینامیکی در پدیده اسمز است."
             },
             {
                 tag: "سوال برگه میان‌ترم",
-                title: "۲. رابطه انرژی آزاد گیبس اختلاط (ΔG_mix) را بنویسید و توضیح دهید چرا همواره منفی است؟",
-                body: "در تشکیل محلول ایده‌آل در دما و فشار ثابت، ΔH_mix = 0 و ΔS_mix = -R(n₁ ln X₁ + n₂ ln X₂) است. با جایگذاری در ΔG_mix = ΔH_mix - TΔS_mix به رابطه ΔG_mix = RT(n₁ ln X₁ + n₂ ln X₂) می‌رسیم. چون X₁ و X₂ کوچکتر از ۱ هستند، عبارت داخل پرانتز همواره منفی بوده و ΔG_mix < 0 است؛ یعنی حل شدن اجزا در یکدیگر فرآیندی خودبه‌خودی است."
+                title: "۲. رابطه انرژی آزاد گیبس اختلاط (\(\Delta G_{mix}\)) را بنویسید و توضیح دهید چرا همواره منفی است؟",
+                body: "در تشکیل محلول ایده‌آل در دما و فشار ثابت، \(\Delta H_{mix} = 0\) و \(\Delta S_{mix} = -R(n_1 \ln X_1 + n_2 \ln X_2)\) است. با جایگذاری در \(\Delta G_{mix} = \Delta H_{mix} - T\Delta S_{mix}\) به رابطه \(\Delta G_{mix} = RT(n_1 \ln X_1 + n_2 \ln X_2)\) می‌رسیم. چون \(X_1\) و \(X_2\) کوچکتر از ۱ هستند، عبارت داخل پرانتز همواره منفی بوده و \(\Delta G_{mix} < 0\) است؛ یعنی حل شدن اجزا در یکدیگر فرآیندی خودبه‌خودی است."
             },
             {
                 tag: "سوال برگه میان‌ترم",
-                title: "۳. چرا تشکیل محلول ایده‌آل با افزایش آنتروپی (ΔS_mix > 0) همراه است؟",
-                body: "زیرا یک محلول از دیدگاه مولکولی نامنظم‌تر از سازنده‌های خالص تشکیل‌دهنده آن است و میزان بی‌نظمی در اثر اختلاط افزایش می‌یابد. از نظر ریاضی نیز در فرمول ΔS_mix = -R(n₁ ln X₁ + n₂ ln X₂)، چون X_i < 1 و ln X_i < 0 است، حاصل‌ضرب دو علامت منفی عددی مثبت می‌شود (ΔS_mix > 0)."
+                title: "۳. چرا تشکیل محلول ایده‌آل با افزایش آنتروپی (\(\Delta S_{mix} > 0\)) همراه است؟",
+                body: "زیرا یک محلول از دیدگاه مولکولی نامنظم‌تر از سازنده‌های خالص تشکیل‌دهنده آن است و میزان بی‌نظمی در اثر اختلاط افزایش می‌یابد. از نظر ریاضی نیز در فرمول \(\Delta S_{mix} = -R(n_1 \ln X_1 + n_2 \ln X_2)\)، چون \(X_i < 1\) و \(\ln X_i < 0\) است، حاصل‌ضرب دو علامت منفی عددی مثبت می‌شود (\(\Delta S_{mix} > 0\))."
             },
             {
                 tag: "سوال برگه میان‌ترم",
                 title: "۴. چرا محلول دارای حل‌شونده نافرار نقطه جوش بالاتری نسبت به حلال خالص دارد؟",
-                body: "بر اساس قانون رائول (P_s = X_s P_s°)، حل کردن یک جسم نافرار باعث می‌شود کسر مولی حلال (X_s) کمتر از ۱ شود و در نتیجه فشار بخار تعادلی محلول نسبت به حلال خالص کاهش یابد (P_s < P_s° و محلول از جوش می‌افتد). برای آنکه فشار بخار محلول دوباره به فشار ثابت خارجی (1 atm) برسد، باید دمای آن را به اندازه ΔT_b = k_b × m بالاتر ببریم."
+                body: "بر اساس قانون رائول (\(P_s = X_s P_s^\circ\))، حل کردن یک جسم نافرار باعث می‌شود کسر مولی حلال (\(X_s\)) کمتر از ۱ شود و در نتیجه فشار بخار تعادلی محلول نسبت به حلال خالص کاهش یابد (\(P_s < P_s^\circ\) و محلول از جوش می‌افتد). برای آنکه فشار بخار محلول دوباره به فشار ثابت خارجی (1 atm) برسد، باید دمای آن را به اندازه \(\Delta T_b = k_b \times m\) بالاتر ببریم."
             },
             {
                 tag: "سوال برگه میان‌ترم",
-                title: "۵. چرا محلول‌های غیرایده‌آل از قانون رائول منحرف می‌شوند؟ دو نوع انحراف را با ضریب فعالیت (γ) و مثال شرح دهید.",
-                body: "به دلیل تفاوت در اندازه، ساختار مولکولی و شدت نیروهای جاذبه واندروالسی بین مولکول‌های غیرهمسان در محلول نسبت به حالت خالص. در محلول غیرایده‌آل P_i / P_i° = a_i = γ_i X_i است. ۱) انحراف منفی (γ < 1 مثل استون-کلروفرم): جاذبه بین مولکول‌های غیرهمسان قوی‌تر از حالت خالص است. ۲) انحراف مثبت (γ > 1 مثل متانول-بنزن): جاذبه بین مولکول‌های غیرهمسان ضعیف‌تر از حالت خالص است."
+                title: "۵. چرا محلول‌های غیرایده‌آل از قانون رائول منحرف می‌شوند؟ دو نوع انحراف را با ضریب فعالیت (\(\gamma\)) و مثال شرح دهید.",
+                body: "به دلیل تفاوت در اندازه، ساختار مولکولی و شدت نیروهای جاذبه واندروالسی بین مولکول‌های غیرهمسان در محلول نسبت به حالت خالص. در محلول غیرایده‌آل \(P_i / P_i^\circ = a_i = \gamma_i X_i\) است. ۱) انحراف منفی (\(\gamma < 1\) مثل استون-کلروفرم): جاذبه بین مولکول‌های غیرهمسان قوی‌تر از حالت خالص است. ۲) انحراف مثبت (\(\gamma > 1\) مثل متانول-بنزن): جاذبه بین مولکول‌های غیرهمسان ضعیف‌تر از حالت خالص است."
             },
             {
                 tag: "سوال برگه میان‌ترم",
-                title: "۶. فرمول افزایش نقطه جوش و کاهش نقطه انجماد و عبارت ترمودینامیکی ثابت‌های k_b و k_f چیست؟",
-                body: "معادلات برابرند با ΔT_b = k_b m و ΔT_f = k_f m. ثابت‌های مولال از ویژگی‌های حلال خالص هستند و عبارت ترمودینامیکی آن‌ها طبق اسلاید دکتر شهریاری عبارت است از: k_b = (M × R × (T_b°)²) / ΔH°_vap و k_f = (M × R × (T_f°)²) / ΔH°_m که در آن M جرم مولی حلال بر حسب کیلوگرم بر مول (kg/mol) است."
+                title: "۶. فرمول افزایش نقطه جوش و کاهش نقطه انجماد و عبارت ترمودینامیکی ثابت‌های \(k_b\) و \(k_f\) چیست؟",
+                body: "معادلات برابرند با \(\Delta T_b = k_b m\) و \(\Delta T_f = k_f m\). ثابت‌های مولال از ویژگی‌های حلال خالص هستند و عبارت ترمودینامیکی آن‌ها طبق اسلاید دکتر شهریاری عبارت است از: \(k_b = (M \times R \times (T_b^\circ)^2) / \Delta H^\circ_{vap}\) و \(k_f = (M \times R \times (T_f^\circ)^2) / \Delta H^\circ_{m}\) که در آن \(M\) جرم مولی حلال بر حسب کیلوگرم بر مول (kg/mol) است."
             },
             {
                 tag: "فصل دوم - تعادل فاز",
                 title: "۷. شرایط سه‌گانه برقراری تعادل میان فازها (دمایی، مکانیکی و توزیعی) را شرح دهید.",
-                body: "۱) تعادل دمایی: دمای تمام فازها یکسان و ثابت باشد وگرنه گرما از فاز گرم به سرد جاری می‌شود. ۲) تعادل مکانیکی (فشاری): فشار وارد بر تمام فازها یکسان باشد. ۳) تعادل توزیعی: پتانسیل شیمیایی (μ_i) هر سازنده در تمام فازهای در حال تعادل با هم مساوی باشد (μ_i^α = μ_i^β)، در غیر این صورت ماده خودبه‌خود از فاز با پتانسیل شیمیایی بیشتر به فاز با پتانسیل شیمیایی کمتر مهاجرت می‌کند."
+                body: "۱) تعادل دمایی: دمای تمام فازها یکسان و ثابت باشد وگرنه گرما از فاز گرم به سرد جاری می‌شود. ۲) تعادل مکانیکی (فشاری): فشار وارد بر تمام فازها یکسان باشد. ۳) تعادل توزیعی: پتانسیل شیمیایی (\(\mu_i\)) هر سازنده در تمام فازهای در حال تعادل با هم مساوی باشد (\(\mu_i^\alpha = \mu_i^\beta\))، در غیر این صورت ماده خودبه‌خود از فاز با پتانسیل شیمیایی بیشتر به فاز با پتانسیل شیمیایی کمتر مهاجرت می‌کند."
             },
             {
                 tag: "فصل سوم - تبدیل فاز",
                 title: "۸. تفاوت تبدیل فاز مرتبه اول و مرتبه دوم و معادلات اهرنفست (Ehrenfest) چیست؟",
-                body: "در تبدیل فاز مرتبه اول (مانند ذوب، تبخیر و تصعید)، انرژی گیبس دو فاز برابر است (G_α = G_β) اما مشتق‌های مرتبه اول گیبس یعنی آنتروپی (S) و حجم مولی (V) تغییر ناگهانی دارند. در تبدیل فاز مرتبه دوم (مانند تبدیل هلیم مایع I به ابرسیال هلیم II در خط لاندا)، G، S و V هر دو فاز برابرند ولی مشتق‌های مرتبه دوم گیبس یعنی ظرفیت گرمایی (C_p) و ضریب تراکم همدما (β) متفاوت‌اند و از معادلات اهرنفست پیروی می‌کنند: dP/dT = (α₂ - α₁)/(β₂ - β₁) = (C_p2 - C_p1)/(TV(α₂ - α₁))."
+                body: "در تبدیل فاز مرتبه اول (مانند ذوب، تبخیر و تصعید)، انرژی گیبس دو فاز برابر است (\(G_\alpha = G_\beta\)) اما مشتق‌های مرتبه اول گیبس یعنی آنتروپی (\(S\)) و حجم مولی (\(V\)) تغییر ناگهانی دارند. در تبدیل فاز مرتبه دوم (مانند تبدیل هلیم مایع I به ابرسیال هلیم II در خط لاندا)، \(G\)، \(S\) و \(V\) هر دو فاز برابرند ولی مشتق‌های مرتبه دوم گیبس یعنی ظرفیت گرمایی (\(C_p\)) و ضریب تراکم همدما (\(\beta\)) متفاوت‌اند و از معادلات اهرنفست پیروی می‌کنند: \(dP/dT = (\alpha_2 - \alpha_1)/(\beta_2 - \beta_1) = (C_{p2} - C_{p1})/(TV(\alpha_2 - \alpha_1))\)."
             },
             {
                 tag: "فصل پنجم - الکترولیت‌ها",
-                title: "۹. چرا عدد وانت‌هف (i) برای CuSO₄ در محلول ۱ مولار برابر ۰.۹۳ است در حالی که مقدار مورد انتظار ۲ است؟",
-                body: "در محلول‌های غلیظ و به‌ویژه یون‌های دوظرفیتی مانند Cu²⁺ و SO₄²⁻، به دلیل جاذبه‌های الکترواستاتیکی قوی، مزاحمت‌های یونی و تشکیل «زوج یون» (Ion pairing) رخ می‌دهد؛ در نتیجه تعداد ذرات مستقل موثر در خواص غلظتی به شدت کاهش یافته و عدد وانت‌هف (i) بسیار کمتر از ν=2 می‌شود."
+                title: "۹. چرا عدد وانت‌هف (\(i\)) برای \(CuSO_4\) در محلول ۱ مولار برابر ۰.۹۳ است در حالی که مقدار مورد انتظار ۲ است؟",
+                body: "در محلول‌های غلیظ و به‌ویژه یون‌های دوظرفیتی مانند \(Cu^{2+}\) و \(SO_4^{2-}\)، به دلیل جاذبه‌های الکترواستاتیکی قوی، مزاحمت‌های یونی و تشکیل «زوج یون» (Ion pairing) رخ می‌دهد؛ در نتیجه تعداد ذرات مستقل موثر در خواص غلظتی به شدت کاهش یافته و عدد وانت‌هف (\(i\)) بسیار کمتر از \(\nu=2\) می‌شود."
             },
             {
                 tag: "فصل پنجم - الکترولیت‌ها",
-                title: "۱۰. نظریه دبای - هوکل - انساجر و دلیل تحرک یونی فوق‌العاده بالای یون‌های H⁺ و OH⁻ در آب چیست؟",
-                body: "طبق نظریه دبای-هوکل-انساجر، هر یون در محاصره اتمسفر یونی با بار مخالف است که حرکت آن را کند می‌کند: Λ_M = Λ_0,M - (A + B Λ_0,M)M^(1/2). همچنین تحرک یونی و رسانایی حدی H⁺ و OH⁻ در آب بسیار بیشتر از سایر یون‌هاست زیرا انتقال بار آن‌ها از طریق جهش پروتون در شبکه پیوندهای هیدروژنی مولکول‌های آب (مکانیسم گروتوس) صورت می‌گیرد."
+                title: "۱۰. نظریه دبای - هوکل - انساجر و دلیل تحرک یونی فوق‌العاده بالای یون‌های \(H^+\) و \(OH^-\) در آب چیست؟",
+                body: "طبق نظریه دبای-هوکل-انساجر، هر یون در محاصره اتمسفر یونی با بار مخالف است که حرکت آن را کند می‌کند: \(\Lambda_M = \Lambda_{0,M} - (A + B \Lambda_{0,M})M^{1/2}\). همچنین تحرک یونی و رسانایی حدی \(H^+\) و \(OH^-\) در آب بسیار بیشتر از سایر یون‌هاست زیرا انتقال بار آن‌ها از طریق جهش پروتون در شبکه پیوندهای هیدروژنی مولکول‌های آب (مکانیسم گروتوس) صورت می‌گیرد."
             }
         ];
 
@@ -552,6 +564,7 @@
             });
             if (num === 1) updateAllCharts();
             if (num === 3) renderVaporTableChart();
+            renderMathJax();
         }
 
         function updateAllCharts() {
@@ -581,11 +594,11 @@
             const enrich = (xb_vap / (1 - xb_vap)).toFixed(2);
 
             document.getElementById('live-point-calc').innerHTML = `
-                <div class="text-amber-300 font-bold border-b border-slate-800 pb-1">🎯 محاسبات نقطه انتخابی ($X_B^l = ${xb_sel.toFixed(2)}$):</div>
-                <div class="flex justify-between"><span>فشار جزئی $P_B$ و $P_C$:</span><span class="font-mono text-sky-300">${pB_part.toFixed(1)} , ${pC_part.toFixed(1)} Torr</span></div>
-                <div class="flex justify-between"><span>فشار کل حباب (معادله ۶۷):</span><span class="font-mono text-emerald-300 font-bold">P = ${p_tot.toFixed(1)} Torr</span></div>
-                <div class="flex justify-between"><span>کسر مولی در فاز بخار (معادله ۶۵):</span><span class="font-mono text-rose-300 font-bold">X_B^v = ${xb_vap.toFixed(3)}</span></div>
-                <div class="flex justify-between"><span>نسبت $X_B^v / X_C^v$ (معادله ۶۶):</span><span class="font-mono text-purple-300">${enrich}</span></div>
+                <div class="text-amber-300 font-bold border-b border-slate-800 pb-1">🎯 محاسبات نقطه انتخابی (\(X_B^l = ${xb_sel.toFixed(2)}\)):</div>
+                <div class="flex justify-between"><span>فشار جزئی \(P_B\) و \(P_C\):</span><span class="font-mono text-sky-300">${pB_part.toFixed(1)} , ${pC_part.toFixed(1)} Torr</span></div>
+                <div class="flex justify-between"><span>فشار کل حباب (معادله ۶۷):</span><span class="font-mono text-emerald-300 font-bold">\(P\) = ${p_tot.toFixed(1)} Torr</span></div>
+                <div class="flex justify-between"><span>کسر مولی در فاز بخار (معادله ۶۵):</span><span class="font-mono text-rose-300 font-bold">\(X_B^v\) = ${xb_vap.toFixed(3)}</span></div>
+                <div class="flex justify-between"><span>نسبت \(X_B^v / X_C^v\) (معادله ۶۶):</span><span class="font-mono text-purple-300">${enrich}</span></div>
             `;
 
             const labels = [], liquidData = [], vaporData = [], pointData = [], dgData = [], tdsData = [], dhData = [];
@@ -672,6 +685,8 @@
                     plugins: { legend: { labels: { color: '#f8fafc', font: { family: 'Vazirmatn', size: 11 } } } }
                 }
             });
+
+            renderMathJax();
         }
 
         function setPresetSalt(k, lp, ln, n, name) {
@@ -694,13 +709,14 @@
                     <span class="text-amber-300 font-black text-base md:text-lg">📋 بازسازی تخته کلاس دکتر سارا شهریاری (${saltName})</span>
                     <span class="text-xs bg-black/40 px-3 py-1 rounded-full text-emerald-300 font-mono">1 m³ = 1000 Lit</span>
                 </div>
-                <div class="text-xs md:text-sm"><b>الف)</b> چون محلول سیرشده بسیار رقیق است، می‌توان <b>Λ</b> و <b>Λ₀</b> آن را تقریباً یکی گرفت:</div>
-                <div class="bg-black/30 p-3 rounded-xl font-mono text-xs md:text-sm dir-ltr">1) Λ₀ ≃ Λ = λ₀(+) + λ₀(-) = ${lp} + ${ln} = <span class="text-amber-300 font-bold">${l0.toFixed(6)} S·m²·eq⁻¹</span></div>
-                <div class="bg-black/30 p-3 rounded-xl font-mono text-xs md:text-sm dir-ltr">2) Λ₀ ≃ Λ = k / (1000 × N) = ${k} / (1000 × N) ⟹ <span class="text-sky-300 font-bold">N = ${N.toFixed(8)} eq·L⁻¹</span></div>
-                <div class="text-xs md:text-sm"><b>فرمول دست‌خط پای تخته برای نمک‌های فلزی:</b> <span class="text-amber-300 font-bold">n = (ظرفیت فلز × تعداد فلز) = ${n}</span></div>
-                <div class="bg-black/30 p-3 rounded-xl font-mono text-xs md:text-sm dir-ltr">3) N = n × M ⟹ M = N / ${n} = ${N.toFixed(8)} / ${n} = <span class="text-emerald-300 font-bold">${M.toExponential(3)} mol·L⁻¹</span></div>
-                <div class="bg-emerald-900/50 p-3.5 rounded-xl border border-emerald-400/50 font-mono text-xs md:text-sm dir-ltr">4) <b>Ksp</b> = M² = (${M.toExponential(3)})² = <span class="text-amber-300 font-black text-base">${ksp.toExponential(3)} (mol/L)²</span></div>
+                <div class="text-xs md:text-sm"><b>الف)</b> چون محلول سیرشده بسیار رقیق است، می‌توان <b>\(\Lambda\)</b> و <b>\(\Lambda_\circ\)</b> آن را تقریباً یکی گرفت:</div>
+                <div class="bg-black/30 p-3 rounded-xl font-mono text-xs md:text-sm dir-ltr">1) \(\Lambda_\circ \simeq \Lambda = \lambda_{\circ(+)} + \lambda_{\circ(-)}\) = ${lp} + ${ln} = <span class="text-amber-300 font-bold">${l0.toFixed(6)} \(S\cdot m^2\cdot eq^{-1}\)</span></div>
+                <div class="bg-black/30 p-3 rounded-xl font-mono text-xs md:text-sm dir-ltr">2) \(\Lambda_\circ \simeq \Lambda = k / (1000 \times N)\) = ${k} / (1000 \times N) \(\implies\) <span class="text-sky-300 font-bold">\(N\) = ${N.toFixed(8)} \(eq\cdot L^{-1}\)</span></div>
+                <div class="text-xs md:text-sm"><b>فرمول دست‌خط پای تخته برای نمک‌های فلزی:</b> <span class="text-amber-300 font-bold">\(n\) = (ظرفیت فلز \(\times\) تعداد فلز) = ${n}</span></div>
+                <div class="bg-black/30 p-3 rounded-xl font-mono text-xs md:text-sm dir-ltr">3) \(N = n \times M \implies M = N / ${n}\) = ${N.toFixed(8)} / ${n} = <span class="text-emerald-300 font-bold">${M.toExponential(3)} \(mol\cdot L^{-1}\)</span></div>
+                <div class="bg-emerald-900/50 p-3.5 rounded-xl border border-emerald-400/50 font-mono text-xs md:text-sm dir-ltr">4) <b>\(K_{sp}\)</b> = \(M^2\) = (${M.toExponential(3)})\(^2\) = <span class="text-amber-300 font-black text-base">${ksp.toExponential(3)} \((mol/L)^2\)</span></div>
             `;
+            renderMathJax();
         }
 
         function setIonicPreset(m, b, a, zp, zn, label) {
@@ -726,10 +742,11 @@
 
             document.getElementById('ionic-output').innerHTML = `
                 <div class="text-sky-300 font-bold">${label}:</div>
-                <div>• مولالیته کاتیون ($m_+ = b \times m$): <b class="font-mono text-white">${mp.toFixed(3)} m</b> | مولالیته آنیون ($m_- = a \times m$): <b class="font-mono text-white">${mn.toFixed(3)} m</b></div>
-                <div>• میانگین مولالیته یونی ($m_\pm = (m_+^b \times m_-^a)^{\\frac{1}{a+b}}$): <b class="font-mono text-emerald-400">${m_mean.toFixed(4)} m</b></div>
-                <div>• قدرت یونی محلول ($I_m = \\frac{1}{2}\\sum m_i Z_i^2$): <b class="font-mono text-amber-400 text-base">${I.toFixed(4)} m</b></div>
+                <div>• مولالیته کاتیون (\(m_+ = b \times m\)): <b class="font-mono text-white">${mp.toFixed(3)} m</b> | مولالیته آنیون (\(m_- = a \times m\)): <b class="font-mono text-white">${mn.toFixed(3)} m</b></div>
+                <div>• میانگین مولالیته یونی (\(m_\pm = (m_+^b \times m_-^a)^{\frac{1}{a+b}}\)): <b class="font-mono text-emerald-400">${m_mean.toFixed(4)} m</b></div>
+                <div>• قدرت یونی محلول (\(I_m = \frac{1}{2}\sum m_i Z_i^2\)): <b class="font-mono text-amber-400 text-base">${I.toFixed(4)} m</b></div>
             `;
+            renderMathJax();
         }
 
         function calcWeak() {
@@ -744,11 +761,12 @@
             const kin = (alpha * alpha * N) / (1 - alpha);
 
             document.getElementById('weak-output').innerHTML = `
-                <div>1️⃣ <b>رسانایی هم‌ارز حدی ($\Lambda_\circ$):</b> <b class="font-mono text-sky-300">${l0.toFixed(6)} S·m²·eq⁻¹</b></div>
-                <div>2️⃣ <b>رسانایی هم‌ارز محلول ($\Lambda = \\frac{k}{1000N}$):</b> <b class="font-mono text-emerald-300">${L.toFixed(6)} S·m²·eq⁻¹</b></div>
-                <div>3️⃣ <b>درجه یونش ($\alpha = \\frac{\Lambda}{\Lambda_\circ}$):</b> <b class="font-mono text-amber-300">${alpha.toFixed(4)} (${(alpha*100).toFixed(2)}%)</b></div>
-                <div>4️⃣ <b>ثابت تعادل یونش ($K_{in} = \\frac{\\alpha^2 M_0}{1-\\alpha}$):</b> <b class="font-mono text-rose-300">${kin.toExponential(3)} mol·L⁻¹</b></div>
+                <div>1️⃣ <b>رسانایی هم‌ارز حدی (\(\Lambda_\circ\)):</b> <b class="font-mono text-sky-300">${l0.toFixed(6)} \(S\cdot m^2\cdot eq^{-1}\)</b></div>
+                <div>2️⃣ <b>رسانایی هم‌ارز محلول (\(\Lambda = \frac{k}{1000N}\)):</b> <b class="font-mono text-emerald-300">${L.toFixed(6)} \(S\cdot m^2\cdot eq^{-1}\)</b></div>
+                <div>3️⃣ <b>درجه یونش (\(\alpha = \frac{\Lambda}{\Lambda_\circ}\)):</b> <b class="font-mono text-amber-300">${alpha.toFixed(4)} (${(alpha*100).toFixed(2)}%)</b></div>
+                <div>4️⃣ <b>ثابت تعادل یونش (\(K_{in} = \frac{\alpha^2 M_0}{1-\alpha}\)):</b> <b class="font-mono text-rose-300">${kin.toExponential(3)} \(mol\cdot L^{-1}\)</b></div>
             `;
+            renderMathJax();
         }
 
         function setClapeyronPreset(t0, p0, p, dh) {
@@ -771,10 +789,11 @@
             const dt = tb - t0;
 
             document.getElementById('clap-output').innerHTML = `
-                <div class="font-mono text-xs text-slate-400 dir-ltr">ln(P / P°) = -(ΔH°_vap / R) × (1/T_b - 1/T_b°)</div>
-                <div>• <b>دمای جوش جدید ($T_b$):</b> <b class="font-mono text-emerald-400 text-base">${tb.toFixed(2)} K (${(tb - 273.15).toFixed(2)} °C)</b></div>
-                <div>• <b>تغییر دمای جوش ($\Delta T_b = T_b - T_b^\circ$):</b> <b class="font-mono text-amber-300">${dt >= 0 ? '+' : ''}${dt.toFixed(2)} K</b></div>
+                <div class="font-mono text-xs text-slate-400 dir-ltr">\(\ln(P / P^\circ) = -(\Delta H^\circ_{vap} / R) \times (1/T_b - 1/T_b^\circ)\)</div>
+                <div>• <b>دمای جوش جدید (\(T_b\)):</b> <b class="font-mono text-emerald-400 text-base">${tb.toFixed(2)} K (${(tb - 273.15).toFixed(2)} °C)</b></div>
+                <div>• <b>تغییر دمای جوش (\(\Delta T_b = T_b - T_b^\circ\)):</b> <b class="font-mono text-amber-300">${dt >= 0 ? '+' : ''}${dt.toFixed(2)} K</b></div>
             `;
+            renderMathJax();
         }
 
         function calcIceMelting() {
@@ -785,7 +804,8 @@
             const tm0 = 273.15;
             const dt = (tm0 * dv * dp_pa) / dh;
             const tm = tm0 + dt;
-            document.getElementById('ice-res').innerText = `ΔT = ${dt.toFixed(2)} K ⟹ T_m = ${tm.toFixed(2)} K`;
+            document.getElementById('ice-res').innerHTML = `\(\Delta T = ${dt.toFixed(2)} K \implies T_m = ${tm.toFixed(2)} K\)`;
+            renderMathJax();
         }
 
         function renderVaporTableChart() {
@@ -824,34 +844,42 @@
             const pi_atm = m * 0.08206 * 298.15;
 
             document.getElementById('col-output').innerHTML = `
-                <div>1️⃣ <b>مولالیته محلول ($m = \\frac{\\Delta T_b}{k_b}$):</b> <span class="font-mono text-sky-300 font-bold">${m.toFixed(4)} mol/kg</span></div>
-                <div>2️⃣ <b>جرم مولی جسم حل‌شده ($M_2$):</b> <span class="font-mono text-amber-300 font-bold">${molar_mass.toFixed(1)} g/mol</span></div>
-                <div>3️⃣ <b>فرمول مولکولی گوگرد ($S_n$ با جرم اتمی ۳۲):</b> <span class="font-mono text-emerald-400 font-black text-base">n = ${molar_mass.toFixed(0)} / 32 = ${n_atoms} ⟹ S_${n_atoms}</span></div>
-                <div>4️⃣ <b>فشار اسمزی معادل در ۲۵°C ($\pi \simeq mRT$):</b> <span class="font-mono text-purple-300">${pi_atm.toFixed(2)} atm</span></div>
+                <div>1️⃣ <b>مولالیته محلول (\(m = \frac{\Delta T_b}{k_b}\)):</b> <span class="font-mono text-sky-300 font-bold">${m.toFixed(4)} mol/kg</span></div>
+                <div>2️⃣ <b>جرم مولی جسم حل‌شده (\(M_2\)):</b> <span class="font-mono text-amber-300 font-bold">${molar_mass.toFixed(1)} g/mol</span></div>
+                <div>3️⃣ <b>فرمول مولکولی گوگرد (\(S_n\) با جرم اتمی ۳۲):</b> <span class="font-mono text-emerald-400 font-black text-base">\(n = ${molar_mass.toFixed(0)} / 32 = ${n_atoms} \implies S_{${n_atoms}}\)</span></div>
+                <div>4️⃣ <b>فشار اسمزی معادل در ۲۵°C (\(\pi \simeq mRT\)):</b> <span class="font-mono text-purple-300">${pi_atm.toFixed(2)} atm</span></div>
             `;
+            renderMathJax();
         }
 
         function showGibbs(id) {
             const data = {
-                1: `<h3 class="text-sky-400 font-extrabold text-base mb-1">۱. تعادل گازی آمونیاک: $N_{2(g)} + 3H_{2(g)} \\rightleftharpoons 2NH_{3(g)}$</h3>
-                    <p>• گونه‌ها: <b>n = 3</b> ($N_2, H_2, NH_3$) | تک‌فاز گازی: <b>P = 1</b> | ۱ واکنش تعادلی: <b>r = 1</b>.</p>
-                    <p>• <b>حالت الف (مقادیر اولیه دلخواه):</b> شرط موازنه‌ای نداریم (<b>s = 0</b>) ⬅️ <b>C = 3 - (1 + 0) = 2</b> سازنده مستقل.</p>
-                    <p>• <b>حالت ب (حاصل از تفکیک $NH_3$ خالص):</b> شرط موازنه‌ای $[H_2] = 3[N_2]$ در همان فاز گاز برقرار است (<b>s = 1</b>) ⬅️ <b>C = 3 - (1 + 1) = 1</b> سازنده مستقل.</p>`,
-                2: `<h3 class="text-emerald-400 font-extrabold text-base mb-1">۲. محلول آبی استیک اسید ($CH_3COOH$ در آب):</h3>
-                    <p>• گونه‌های موجود در محلول: $H_2O, CH_3COOH, H^+, CH_3COO^-, OH^-$ ⬅️ <b>n = 5</b>.</p>
-                    <p>• واکنش‌های تعادلی مستقل (یونش استیک اسید + خودیونش آب): <b>r = 2</b>.</p>
-                    <p>• شرط موازنه‌ای خنثی بودن الکتریکی محلول ($[H^+] = [CH_3COO^-] + [OH^-]$): <b>s = 1</b>.</p>
-                    <p>• نتیجه: <b>C = 5 - (2 + 1) = 2</b> سازنده مستقل (آب و استیک اسید).</p>`,
-                3: `<h3 class="text-amber-400 font-extrabold text-base mb-1">۳. تله امتحانی: تجزیه $CaCO_{3(s)} \\rightleftharpoons CaO_{(s)} + CO_{2(g)}$</h3>
-                    <p>• تعداد گونه‌ها: <b>n = 3</b> | تعداد فازها: <b>P = 3</b> (دو جامد خالص مجزا + یک گاز) | <b>r = 1</b>.</p>
-                    <p>• <b>قانون طلایی دکتر شهریاری:</b> شرط موازنه‌ای ($s$) فقط زمانی در معادله شرکت می‌کند که منجر به محاسبه یک کسر مولی از سایر کسرهای مولی در یک فاز شود. چون $CaO$ و $CO_2$ در دو فاز جداگانه هستند، <b>s = 0</b> است!</p>
-                    <p>• نتیجه: <b>C = 3 - (1 + 0) = 2</b> و درجه آزادی: <b>F = (C + 2) - P = 2 + 2 - 3 = 1</b>.</p>`,
-                4: `<h3 class="text-rose-400 font-extrabold text-base mb-1">۴. انجماد مذاب $LiNO_3$ و $KNO_3$ (فاز متراکم):</h3>
-                    <p>• یون‌های مذاب: $Li^+, K^+, NO_3^-$ (<b>n = 3</b>)، بدون واکنش شیمیایی (<b>r = 0</b>) و دارای شرط خنثی بودن الکتریکی (<b>s = 1</b>) ⬅️ <b>C = 3 - 1 = 2</b>.</p>
-                    <p>• چون سیستم فاز متراکم (جامد-مایع) است، فشار ثابت فرض شده و از <b>F = (C + 1) - P</b> استفاده می‌کنیم:</p>
-                    <p>• قبل از انجماد ($P=1$): <b>F = 2</b> | رسوب $LiNO_3$ ($P=2$): <b>F = 1</b> | رسوب هم‌زمان هر دو نمک ($P=3$): <b>F = 2 + 1 - 3 = 0</b> (دما و غلظت ثابت می‌ماند).</p>`
+                1: `<h3 class="text-sky-400 font-extrabold text-base mb-1">۱. تعادل گازی آمونیاک: \(N_{2(g)} + 3H_{2(g)} \rightleftharpoons 2NH_{3(g)}\)</h3>
+                    <p>• گونه‌ها: <b>\(n = 3\)</b> (\(N_2, H_2, NH_3\)) | تک‌فاز گازی: <b>\(P = 1\)</b> | ۱ واکنش تعادلی: <b>\(r = 1\)</b>.</p>
+                    <p>• <b>حالت الف (مقادیر اولیه دلخواه):</b> شرط موازنه‌ای نداریم (<b>\(s = 0\)</b>) ⬅️ <b>\(C = 3 - (1 + 0) = 2\)</b> سازنده مستقل.</p>
+                    <p>• <b>حالت ب (حاصل از تفکیک \(NH_3\) خالص):</b> شرط موازنه‌ای \([H_2] = 3[N_2]\) در همان فاز گاز برقرار است (<b>\(s = 1\)</b>) ⬅️ <b>\(C = 3 - (1 + 1) = 1\)</b> سازنده مستقل.</p>`,
+                2: `<h3 class="text-emerald-400 font-extrabold text-base mb-1">۲. محلول آبی استیک اسید (\(CH_3COOH\) در آب):</h3>
+                    <p>• گونه‌های موجود در محلول: \(H_2O, CH_3COOH, H^+, CH_3COO^-, OH^-\) ⬅️ <b>\(n = 5\)</b>.</p>
+                    <p>• واکنش‌های تعادلی مستقل (یونش استیک اسید + خودیونش آب): <b>\(r = 2\)</b>.</p>
+                    <p>• شرط موازنه‌ای خنثی بودن الکتریکی محلول (\([H^+] = [CH_3COO^-] + [OH^-]\)): <b>\(s = 1\)</b>.</p>
+                    <p>• نتیجه: <b>\(C = 5 - (2 + 1) = 2\)</b> سازنده مستقل (آب و استیک اسید).</p>`,
+                3: `<h3 class="text-amber-400 font-extrabold text-base mb-1">۳. تله امتحانی: تجزیه \(CaCO_{3(s)} \rightleftharpoons CaO_{(s)} + CO_{2(g)}\)</h3>
+                    <p>• تعداد گونه‌ها: <b>\(n = 3\)</b> | تعداد فازها: <b>\(P = 3\)</b> (دو جامد خالص مجزا + یک گاز) | <b>\(r = 1\)</b>.</p>
+                    <p>• <b>قانون طلایی دکتر شهریاری:</b> شرط موازنه‌ای (\(s\)) فقط زمانی در معادله شرکت می‌کند که منجر به محاسبه یک کسر مولی از سایر کسرهای مولی در یک فاز شود. چون \(CaO\) و \(CO_2\) در دو فاز جداگانه هستند، <b>\(s = 0\)</b> است!</p>
+                    <p>• نتیجه: <b>\(C = 3 - (1 + 0) = 2\)</b> و درجه آزادی: <b>\(F = (C + 2) - P = 2 + 2 - 3 = 1\)</b>.</p>`,
+                4: `<h3 class="text-rose-400 font-extrabold text-base mb-1">۴. انجماد مذاب \(LiNO_3\) و \(KNO_3\) (فاز متراکم):</h3>
+                    <p>• یون‌های مذاب: \(Li^+, K^+, NO_3^-\) (<b>\(n = 3\)</b>)، بدون واکنش شیمیایی (<b>\(r = 0\)</b>) و دارای شرط خنثی بودن الکتریکی (<b>\(s = 1\)</b>) ⬅️ <b>\(C = 3 - 1 = 2\)</b>.</p>
+                    <p>• چون سیستم فاز متراکم (جامد-مایع) است، فشار ثابت فرض شده و از <b>\(F = (C + 1) - P\)</b> استفاده می‌کنیم:</p>
+                    <p>• قبل از انجماد (\(P=1\)): <b>\(F = 2\)</b> | رسوب \(LiNO_3\) (\(P=2\)): <b>\(F = 1\)</b> | رسوب هم‌زمان هر دو نمک (\(P=3\)): <b>\(F = 2 + 1 - 3 = 0\)</b> (دما و غلظت ثابت می‌ماند).</p>`,
+                5: `<h3 class="text-indigo-400 font-extrabold text-base mb-1">۵. تجزیه آمونیوم کلرید: \(NH_4Cl_{(s)} \rightleftharpoons NH_{3(g)} + HCl_{(g)}\)</h3>
+                    <p>• اگر از تجزیه \(NH_4Cl\) خالص شروع شود، هر دو گاز \(NH_3\) و \(HCl\) در <b>یک فاز گازی مشترک</b> قرار دارند و کسر مولی هر کدام ۰.۵ است؛ بنابراین شرط موازنه‌ای \([NH_3] = [HCl]\) معتبر است (<b>\(s = 1\)</b>)!</p>
+                    <p>• نتیجه: <b>\(n = 3, r = 1, s = 1 \implies C = 3 - (1 + 1) = 1\)</b> و با توجه به \(P = 2\) (یک جامد و یک گاز)، درجه آزادی <b>\(F = 1 + 2 - 2 = 1\)</b> است.</p>`,
+                6: `<h3 class="text-teal-400 font-extrabold text-base mb-1">۶. تعادل \(CuO_{(s)} + H_{2(g)} \rightleftharpoons Cu_{(s)} + H_2O_{(g)}\)</h3>
+                    <p>• <b>روش اول (کلی):</b> \(n = 4, r = 1, s = 0, P = 3\) (دو فاز جامد مستقل + یک فاز گاز) ⬅️ \(C = 3\) و \(F = 3 + 2 - 3 = 2\).</p>
+                    <p>• <b>روش دوم (نکته صفحه ۳۸ جزوه):</b> چون غلظت جامدات خالص (\(CuO\) و \(Cu\)) ثابت است، می‌توان آن‌ها را کنار گذاشت: فقط ۲ گونه گازی داریم (\(n=2, r=1, P=1\)) ⬅️ \(F = 2 - 1 + 2 - 1 = 2\).</p>`
             };
             document.getElementById('gibbs-box').innerHTML = data[id];
+            renderMathJax();
         }
 
         function calcCustomGibbs() {
@@ -865,10 +893,11 @@
             const F = C + cond - P;
 
             document.getElementById('custom-gibbs-out').innerHTML = `
-                <div>1️⃣ <b>تعداد سازنده‌های مستقل ($C$):</b> <span class="font-mono text-sky-300">C = n - (r + s) = ${n} - (${r} + ${s}) = <b>${C}</b></span></div>
-                <div>2️⃣ <b>تعداد درجات آزادی سیستم ($F$):</b> <span class="font-mono text-amber-300">F = (C + ${cond}) - P = ${C} + ${cond} - ${P} = <b>${F}</b></span></div>
-                <div class="text-xs text-slate-300">${F === 0 ? '🔒 سیستم بی‌متغیر (F=0) است؛ دما، فشار و غلظت فازها کاملاً ثابت و غیرقابل تغییرند.' : (F > 0 ? `✅ سیستم دارای <b>${F}</b> متغیر شدتی مستقل برای جابه‌جایی تعادل بدون تغییر تعداد فازهاست.` : '⚠️ تعداد فازهای واردشده از حد مجاز قاعده فاز گیبس بیشتر است!')}</div>
+                <div>1️⃣ <b>تعداد سازنده‌های مستقل (\(C\)):</b> <span class="font-mono text-sky-300">\(C = n - (r + s) = ${n} - (${r} + ${s}) = \mathbf{${C}}\)</span></div>
+                <div>2️⃣ <b>تعداد درجات آزادی سیستم (\(F\)):</b> <span class="font-mono text-amber-300">\(F = (C + ${cond}) - P = ${C} + ${cond} - ${P} = \mathbf{${F}}\)</span></div>
+                <div class="text-xs text-slate-300 mt-2">${F === 0 ? '🔒 سیستم بی‌متغیر (\(F=0\)) است؛ دما، فشار و غلظت فازها کاملاً ثابت و غیرقابل تغییرند.' : (F > 0 ? `✅ سیستم دارای <b>${F}</b> متغیر شدتی مستقل برای جابه‌جایی تعادل بدون تغییر تعداد فازهاست.` : '⚠️ تعداد فازهای واردشده از حد مجاز قاعده فاز گیبس بیشتر است!')}</div>
             `;
+            renderMathJax();
         }
 
         function filterQA() {
@@ -889,6 +918,7 @@
                     </div>
                 </div>
             `).join('');
+            renderMathJax();
         }
 
         window.onload = () => {
